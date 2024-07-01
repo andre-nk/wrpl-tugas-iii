@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Galactic Tech Emporium</title>
+    <style>
+      body {
+        font-family: "Orbitron", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #0a0a1a;
+        color: #e0e0ff;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+        color: #00ffff;
+        font-size: 2.5em;
+        text-shadow: 0 0 10px #00ffff;
+      }
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+      .product-card {
+        background-color: #1a1a2e;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+      }
+      .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+      }
+      .product-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+      .product-name {
+        font-size: 1.2em;
+        color: #00ffff;
+        margin-bottom: 10px;
+      }
+      .product-price {
+        font-size: 1.4em;
+        color: #ff00ff;
+        margin-bottom: 10px;
+      }
+      .product-stock {
+        color: #00ff00;
+        font-size: 0.9em;
+      }
+      .carousel-container {
+        position: relative;
+        height: 600px;
+        overflow: hidden;
+      }
+      .carousel {
+        transition: transform 0.5s ease;
+      }
+      .carousel-btn {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #00ffff;
+        color: #0a0a1a;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+      .carousel-btn:hover {
+        background-color: #ff00ff;
+      }
+      .carousel-btn.prev {
+        top: 10px;
+      }
+      .carousel-btn.next {
+        bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Galactic Tech Emporium</h1>
+      <div class="carousel-container">
+        <div class="carousel">
+          <div class="product-grid" id="productGrid"></div>
+        </div>
+        <button class="carousel-btn prev">&#9650; Previous</button>
+        <button class="carousel-btn next">&#9660; Next</button>
+      </div>
+    </div>
+
+    <script>
+      const products = [
+        {
+          name: "Quantum Communicator",
+          price: 999.99,
+          stock: 5,
+          image: "https://picsum.photos/200?random=1",
+        },
+        {
+          name: "Holo-Projector",
+          price: 599.99,
+          stock: 8,
+          image: "https://picsum.photos/200?random=2",
+        },
+        {
+          name: "Gravity Boots",
+          price: 799.99,
+          stock: 3,
+          image: "https://picsum.photos/200?random=3",
+        },
+        {
+          name: "Neural Interface",
+          price: 1299.99,
+          stock: 2,
+          image: "https://picsum.photos/200?random=4",
+        },
+        {
+          name: "Plasma Shield",
+          price: 499.99,
+          stock: 10,
+          image: "https://picsum.photos/200?random=5",
+        },
+        {
+          name: "Nano-Replicator",
+          price: 2999.99,
+          stock: 1,
+          image: "https://picsum.photos/200?random=6",
+        },
+        {
+          name: "Time Dilation Watch",
+          price: 3999.99,
+          stock: 4,
+          image: "https://picsum.photos/200?random=7",
+        },
+        {
+          name: "Wormhole Generator",
+          price: 9999.99,
+          stock: 1,
+          image: "https://picsum.photos/200?random=8",
+        },
+        {
+          name: "Tachyon Detector",
+          price: 699.99,
+          stock: 7,
+          image: "https://picsum.photos/200?random=9",
+        },
+        {
+          name: "Anti-Matter Containment Unit",
+          price: 4999.99,
+          stock: 2,
+          image: "https://picsum.photos/200?random=10",
+        },
+        {
+          name: "Fusion Reactor (Portable)",
+          price: 7999.99,
+          stock: 3,
+          image: "https://picsum.photos/200?random=11",
+        },
+        {
+          name: "Teleportation Pad",
+          price: 5999.99,
+          stock: 5,
+          image: "https://picsum.photos/200?random=12",
+        },
+      ];
+
+      function createProductCard(product) {
+        return `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">$${product.price.toFixed(
+                      2
+                    )}</div>
+                    <div class="product-stock">In stock: ${product.stock}</div>
+                </div>
+            `;
+      }
+
+      const productGrid = document.getElementById("productGrid");
+      products.forEach((product) => {
+        productGrid.innerHTML += createProductCard(product);
+      });
+
+      const carousel = document.querySelector(".carousel");
+      const prevBtn = document.querySelector(".prev");
+      const nextBtn = document.querySelector(".next");
+      let currentPosition = 0;
+
+      prevBtn.addEventListener("click", () => {
+        if (currentPosition > 0) {
+          currentPosition--;
+          updateCarousel();
+        }
+      });
+
+      nextBtn.addEventListener("click", () => {
+        if (currentPosition < Math.ceil(products.length / 6) - 1) {
+          currentPosition++;
+          updateCarousel();
+        }
+      });
+
+      function updateCarousel() {
+        carousel.style.transform = `translateY(-${currentPosition * 600}px)`;
+      }
+    </script>
+  </body>
+</html>
